@@ -72,6 +72,7 @@
          </div>
       </div>
    </div>
+   
    <div id="fc_create" data-toggle="modal" data-target="#CalenderModal"></div>
    <div id="fc_edit" data-toggle="modal" data-target="#CalenderModal"></div>
    <!-- /calendar modal -->
@@ -167,11 +168,12 @@
         events: [
             {% for shift in agentshifts %}
             {
-                title: '{{ shift.shifts.name }}',
-                start: '{{ shift.date|date:"Y-m-d" }}',
-                end: '{{ shift.date|date:"Y-m-d" }}',
-                description: '{{ shift.shifts.start_time|time:"H:i" }} - {{ shift.shifts.end_time|time:"H:i" }}'
-            },
+               title: '{{ shift.shifts.name }}',
+               start: '{{ shift.date|date:"Y-m-d" }}',
+               end: '{{ shift.date|date:"Y-m-d" }}',
+               description: '{{ shift.shifts.start_time|time:"H:i" }} - {{ shift.shifts.end_time|time:"H:i" }}',
+               color: '{{ shift.shifts.color}}',               
+               },
             {% endfor %}
         ]
     });
