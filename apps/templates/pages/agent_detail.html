@@ -1,0 +1,264 @@
+{% extends "include/base_site.html" %}
+
+{% block stylesheets %}
+{{ block.super }}
+<style type="text/css">
+   #profileForm input[readonly].form-control, textarea[readonly].form-control {
+    color: inherit;
+    background-color: inherit;
+   }
+</style>
+
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="right_col" role="main">
+   <div class="">
+      <div class="clearfix"></div>
+      <div class="row">
+         <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+               <div class="x_title">
+                  <h2>Agent Detail</h2>
+                  <div class="clearfix"></div>
+               </div>
+               <div class="x_content">
+                  <br />
+                  <form action="." method="POST" class="form-horizontal form-label-left" id="profileForm">
+                     {% csrf_token %}
+                     <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_first_name">First Name <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           {{ form.first_name }}
+                        </div>
+                     </div>
+                     <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_last_name">Last Name <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           {{ form.last_name }}
+                        </div>
+                     </div>
+                     <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_email">Email <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           {{ form.email }}
+                        </div>
+                     </div>
+                     <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_date_of_birth">Date of Birth <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12 xdisplay_inputx form-group has-feedback">
+                           {{ form.date_of_birth }}
+                           <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
+                           <span id="inputSuccess2Status3" class="sr-only">(success)</span>
+                        </div>
+                     </div>
+                     <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_gender">Gender</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           <div id="id_gender" class="btn-group" data-toggle="buttons">
+                              {% for choice in form.gender %}
+                              <label class="btn btn-primary {% if form.gender.value == choice.choice_label %}active{% endif %}" data-toggle-class="btn-default" data-toggle-passive-class="btn-primary">
+                              {{ choice.tag }}
+                              {{ choice.choice_label }}
+                              </label>
+                              {% endfor %}
+                           </div>
+                        </div>
+                     </div>
+                     <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_phone_number">Phone no. <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           {{ form.phone_number }}
+                        </div>
+                     </div>
+                     <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_address">Address
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           {{ form.address }}
+                        </div>
+                     </div>
+                     <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_job_position">Job Position<span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           {{ form.job_position }}
+                        </div>
+                     </div>
+                     <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_department">Department<span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           {{ form.department }}
+                        </div>
+                     </div>
+                     <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_employment_start_date">Employment Date<span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12 xdisplay_inputx form-group has-feedback">
+                           {{ form.employment_start_date }}
+                           <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
+                           <span id="inputSuccess2Status3" class="sr-only">(success)</span>
+                        </div>
+                     </div>
+                     <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_supervisor">Supervisor<span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           {{ form.supervisor }}
+                        </div>
+                     </div>
+                     <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_salary">Salary<span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           {{ form.salary }}
+                        </div>
+                     </div>
+                     <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_salary">Skills<span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           {{ form.skills }}
+                           <div id="suggestions-container" style="position: relative; float: left; width: 250px; margin: 10px;"></div>
+                        </div>
+                     </div>
+                     <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_education">Education
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           {{ form.education }}
+                        </div>
+                     </div>
+                     <div class="form-group">
+                        <label for="id_experience" class="control-label col-md-3 col-sm-3 col-xs-12">Experience
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           {{ form.experience }}
+                        </div>
+                     </div>
+                     <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_emergency_contact_name">Emergency Contact Name<span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           {{ form.emergency_contact_name }}
+                        </div>
+                     </div>
+                     <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_emergency_contact_phone">Emergency Phone No.<span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           {{ form.emergency_contact_phone }}
+                        </div>
+                     </div>
+                     <div class="ln_solid"></div>
+                     <div class="form-group">
+                        {% if request.user.is_authenticated == request.user.is_superuser %}
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3" id='submit_div' hidden='true'>
+                           <button class="btn btn-primary" type="reset" onclick="hideSumbit()">Cancel</button>
+                           <button class="btn btn-primary" type="reset">Reset</button>
+                           <button class="btn btn-success" type="submit">Submit</button>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3" id='edit_div'>
+                           <button id="editButton" type="button" class="btn btn-primary" onclick="showSumbit()">Edit Profile</button>
+                        </div>
+                        {% else %}
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3" id='edit_div'>
+                           <button id="editButton" type="button" class="btn btn-primary" onclick="redirectToPage()">Change Password</button>
+                        </div>
+                        {% endif %}
+                     </div>
+                  </form>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock content %}
+{% block javascripts %}
+{{ block.super }}
+<script type="text/javascript">
+{% if request.user.is_authenticated == request.user.is_superuser %}
+   function init_daterangepicker_single_call() {
+   "undefined" != typeof $.fn.daterangepicker && (console.log("init_daterangepicker_single_call_own")
+   , $("#id_date_of_birth").daterangepicker({
+       singleDatePicker: !0,
+       singleClasses: "picker_3",
+       locale: {
+           format: "YYYY-MM-DD"
+       }
+   }, function(a, b, c) {
+       console.log(a.toISOString(), b.toISOString(), c)
+   }), $("#id_employment_start_date").daterangepicker({
+       singleDatePicker: !0,
+       singleClasses: "picker_3",
+       locale: {
+           format: "YYYY-MM-DD"
+       }
+   }, function(a, b, c) {
+       console.log(a.toISOString(), b.toISOString(), c)
+   }))
+   }
+   function init_TagsInput() {
+    "undefined" != typeof $.fn.tagsInput && $("#id_skills").tagsInput({
+        width: "auto",
+        defaultText: "add skills"
+    })
+   }
+   function updateGenderField() {
+   // Select the active element using its class
+   const activeElement = document.querySelector('.btn-primary.active');
+   if (activeElement) {
+    // Get the value of the active element
+    const value = activeElement.querySelector('input').value;
+   
+    // Set the value of the gender field in the form
+    const genderField = document.querySelector('#id_gender');
+    if (genderField) {
+      genderField.value = value;
+    }
+   } else {
+    console.log('No active element found');
+   }
+   }
+   
+   const choiceElements = document.querySelectorAll('.btn-primary');
+   choiceElements.forEach((choiceElement) => {
+   choiceElement.addEventListener('click', updateGenderField);
+   });
+   function showSumbit() {
+    var edit_div = document.getElementById('edit_div');
+    var submit_div = document.getElementById('submit_div');
+   
+    edit_div.style.display = 'none';
+    submit_div.style.display = 'block';
+    $('#profileForm input, textarea').prop('readonly', false);
+    // tagsInput.tagsInput("input").prop("hidden", false);
+   };
+   function hideSumbit() {
+    var edit_div = document.getElementById('edit_div');
+    var submit_div = document.getElementById('submit_div');
+   
+    edit_div.style.display = 'block';
+    submit_div.style.display = 'none';
+    $('#profileForm input, textarea').prop('readonly', true);
+    // tagsInput.tagsInput("input").prop("hidden", true);
+   };
+   window.onload = function() {
+      init_daterangepicker_single_call();
+      init_TagsInput();
+      $('#profileForm input, textarea').prop('readonly', true);
+   }
+{% else %}
+   function redirectToPage() {
+      window.location.href = "/agents/{{ request.user.username }}/change-password/";
+   }
+{% endif %}
+</script>
+{% endblock javascripts %}

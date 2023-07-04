@@ -1,0 +1,213 @@
+{% extends "include/base_site.html" %}
+{% block title %} Form Advanced {% endblock title %}
+{% block stylesheets %}
+{{ block.super }}
+<!-- FullCalendar -->
+<link href="/static/vendors/fullcalendar/dist/fullcalendar.min.css" rel="stylesheet">
+<link href="/static/vendors/fullcalendar/dist/fullcalendar.print.css" rel="stylesheet" media="print">
+<style type="text/css">
+   .underline-bottom {
+   border-bottom: 1px solid;
+   }
+</style>
+{% endblock stylesheets %}
+{% block content %}
+<div class="right_col" role="main">
+   <div class="">
+      <div class="clearfix"></div>
+      <div class="row">
+         <div class="col-md-7">
+            <div class="x_panel">
+               <div class="x_title">
+                  <h2>Agent Calender <small>Shifts</small></h2>
+                  <div class="clearfix"></div>
+               </div>
+               <div class="x_content">
+                  <div id='calendar'></div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+    {% if request.user.is_authenticated == request.user.is_superuser %}
+   <!-- calendar modal -->
+   <div id="CalenderModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+         <div class="modal-content">
+            <div class="modal-header">
+               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+               <h4 class="modal-title" id="myModalLabel2">Title</h4>
+            </div>
+            <div class="modal-body">
+               <div id="CalenderModalBody" style="padding: 5px 20px;">
+                  <form id="agentshift-form" method="POST" action="/agents/{{ agent.user.username }}/edit/" class="form-horizontal calender" role="form">
+                     {% csrf_token %}
+                     <div class="form-group hidden">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_user">User<span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           {{ form.user }}
+                        </div>
+                     </div>
+                     <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_date">Date<span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12 xdisplay_inputx form-group has-feedback">
+                           {{ form.date }}
+                           <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
+                           <span id="inputSuccess2Status3" class="sr-only">(success)</span>
+                        </div>
+                     </div>
+                     <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_shifts">Shifts<span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           {{ form.shifts }}
+                        </div>
+                     </div>
+                  </form>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-default antoclose2" data-dismiss="modal">Close</button>
+               <button id="button_send" type="button" class="btn btn-primary antosubmit">Send</button>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div id="fc_create" data-toggle="modal" data-target="#CalenderModal"></div>
+   <div id="fc_edit" data-toggle="modal" data-target="#CalenderModal"></div>
+   <!-- /calendar modal -->
+    {% endif %}
+
+</div>
+{% endblock content %}
+{% block javascripts %}
+{{ block.super }}
+<!-- FullCalendar -->
+<script src="/static/vendors/moment/min/moment.min.js"></script>
+<script src="/static/vendors/fullcalendar/dist/fullcalendar.min.js"></script>
+<script type="text/javascript">
+   function init_calendar() {
+    if (typeof($.fn.fullCalendar) === 'undefined') {
+        return;
+    }
+
+    var date = new Date(),
+        d = date.getDate(),
+        m = date.getMonth(),
+        y = date.getFullYear(),
+        started,
+        ended,
+        categoryClass;
+
+    var calendar = $('#calendar').fullCalendar({
+        header: {
+            left: 'prev,next today',
+            center: 'title',
+            right: ''
+        },
+        themeSystem: 'bootstrap',
+        selectable: true,
+        selectHelper: true,
+        {% if request.user.is_authenticated == request.user.is_superuser %}
+        editable: true,
+        select: function(start, end) {
+             $('#fc_create').click();
+             $('#CalenderModal').find('.modal-title').text('New Calendar Entry');
+             $('#button_send').text('Create Shift');
+             $('#agentshift-form')[0].reset();
+             $('#id_date').val(start.format('YYYY-MM-DD'));
+             $('#id_date').prop('readonly', true);
+
+             $('.antosubmit').off('click').on('click', function() {
+                submitForm("agentshift-form", function(event) {
+                    // Handle the event details here
+                    console.log('Created event:', event);
+                    // Create the calendar event using the event details
+                    var eventData = {
+                        title: event.title,
+                        start: event.start,
+                        end: event.end,
+                        description: event.description
+                    };
+
+                    // Create a new calendar event using the eventData
+                    calendar.fullCalendar('renderEvent', eventData, true);
+                });
+                $('.antoclose2').click();
+             });
+         },
+        eventClick: function(calEvent, jsEvent, view) {
+            $('#fc_edit').click();
+            $('#CalenderModal').find('.modal-title').text('Edit Calendar Entry');
+            $('#button_send').text('Save Changes');
+            $('#agentshift-form')[0].reset();
+            //$('#update-agentshift-form').attr('action', '/agents/{{ agent.user.username }}/edit/');
+            $('#id_date').val(calEvent.start.format('YYYY-MM-DD'));
+            $('#id_date').prop('readonly', true);
+            $('#id_shifts').val(calEvent.shifts);
+            categoryClass = $("#event_type").val();
+
+            $('.antosubmit').off('click').on('click', function() {
+                submitForm("agentshift-form", function(event) {
+                    // Handle the event details here
+                    console.log('Updated event:', event);
+                    // Update the calendar event using the event details
+                    calEvent.title = event.title;
+                    calEvent.start = event.start;
+                    calEvent.end = event.end;
+                    calEvent.description = event.description;
+                    calendar.fullCalendar('updateEvent', calEvent);
+                });
+                $('.antoclose2').click();
+            });
+        },
+        {% endif %}
+        eventRender: function(eventObj, $el) {
+            $el.html('<div class="event-title underline-bottom"><h6>' + eventObj.title + '</h6></div><div class="event-description">' + eventObj.description + '</div>');
+        },
+        events: [
+            {% for shift in agentshifts %}
+            {
+                title: '{{ shift.shifts.name }}',
+                start: '{{ shift.date|date:"Y-m-d" }}',
+                end: '{{ shift.date|date:"Y-m-d" }}',
+                description: '{{ shift.shifts.start_time|time:"H:i" }} - {{ shift.shifts.end_time|time:"H:i" }}'
+            },
+            {% endfor %}
+        ]
+    });
+}
+{% if request.user.is_authenticated == request.user.is_superuser %}
+function submitForm(formId, callback) {
+    var form = document.getElementById(formId);
+    var formData = new FormData(form);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', form.action);
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                // Handle success response
+                var response = JSON.parse(xhr.responseText);
+                if (response.success) {
+                    // Form submission successful
+                    console.log('Form submitted successfully.');
+                    callback(response.event); // Pass the event details to the callback function
+                } else {
+                    // Form submission failed
+                    console.error('Form submission failed:', response.errors);
+                }
+            } else {
+                // Handle error response
+                console.error('Error:', xhr.status, xhr.statusText);
+            }
+        }
+    };
+
+    xhr.send(formData);
+}
+{% endif %}
+init_calendar();
+</script>
+{% endblock javascripts %}

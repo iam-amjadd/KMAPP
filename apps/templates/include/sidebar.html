@@ -1,0 +1,35 @@
+<div class="left_col scroll-view">
+  <div class="navbar nav_title" style="border: 0;">
+    <a href="\" class="site_title"><i class="fa fa-spinner"></i> <span>KMAP</span></a>
+  </div>
+
+  <div class="clearfix"></div>
+  <br />
+
+  <!-- sidebar menu -->
+  <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+    <div class="menu_section">
+      <ul class="nav side-menu">
+        <li><a href="/"><i class="fa fa-tasks"></i>Dashboard</a></li>
+      </ul>
+      {% if request.user.is_authenticated != request.user.is_superuser %}
+      <ul class="nav side-menu">
+        <li><a href="/agents/{{ request.user.username }}/"><i class="fa fa-user"></i>User Profile</a></li>
+      </ul>
+      <ul class="nav side-menu">
+        <li><a href="/agents/{{ request.user.username }}/schedule/"><i class="fa fa-calendar"></i>Shifts Calender</a></li>
+      </ul>
+      {% endif %}
+      {% if request.user.is_superuser %}
+      <ul class="nav side-menu">
+        <li><a href="{% url 'agentsList' %}"><i class="fa fa-group"></i> Agents List </a></li>
+      </ul>
+      {% endif %}
+      <ul class="nav side-menu">
+        <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i> Logout </a></li>
+      </ul>
+      
+    </div>
+  </div>
+  <!-- /sidebar menu -->
+</div>
